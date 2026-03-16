@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">My Reviews</h2>
+
+    {% if reviews %}
+        {% for review in reviews %}
+        <div class="card shadow-sm rounded-4 mb-4 p-4 hover-card">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6>{{ review.product.name }}</h6>
+                    <small class="text-muted">{{ review.created_at|date:"M d, Y" }}</small>
+                </div>
+                <div>
+                    <span class="fw-bold">{{ review.rating }}⭐</span>
+                </div>
+            </div>
+            <p class="mt-2">{{ review.description }}</p>
+            <div class="d-flex gap-2">
+                <a href="{% url 'edit_review' review.id %}" class="btn btn-sm btn-outline-primary rounded-pill">Edit</a>
+                <a href="{% url 'delete_review' review.id %}" class="btn btn-sm btn-outline-danger rounded-pill">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center rounded-4">
+            You haven’t submitted any reviews yet.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

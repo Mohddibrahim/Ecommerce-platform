@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">My Complaints</h2>
+
+    {% if complaints %}
+        {% for complaint in complaints %}
+        <div class="card shadow-sm rounded-4 mb-4 p-4 hover-card">
+            <div class="d-flex justify-content-between">
+                <div>
+                    <h6>{{ complaint.product.name }}</h6>
+                    <small class="text-muted">{{ complaint.created_at|date:"M d, Y" }}</small>
+                </div>
+                <div>
+                    <span class="badge 
+                        {% if complaint.status == 'pending' %} bg-warning text-dark
+                        {% elif complaint.status == 'resolved' %} bg-success
+                        {% else %} bg-secondary
+                        {% endif %} rounded-pill px-3 py-2 fs-6">
+                        {{ complaint.status|title }}
+                    </span>
+                </div>
+            </div>
+            <p class="mt-2">{{ complaint.message|truncatewords:15 }}</p>
+            <div class="d-flex gap-2">
+                <a href="{% url 'edit_complaint' complaint.id %}" class="btn btn-sm btn-outline-primary rounded-pill">Edit</a>
+                <a href="{% url 'delete_complaint' complaint.id %}" class="btn btn-sm btn-outline-danger rounded-pill">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center rounded-4">
+            You haven’t submitted any complaints yet.
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

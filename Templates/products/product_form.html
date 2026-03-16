@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Add Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            {{ form.category.label_tag }}
+            {{ form.category }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.description.label_tag }}
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.price.label_tag }}
+            {{ form.price }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.stock.label_tag }}
+            {{ form.stock }}
+        </div>
+
+        <div class="mb-3">
+            {{ form.image.label_tag }}
+            {{ form.image }}
+        </div>
+
+        <button type="submit" class="btn btn-success">Save Product</button>
+    </form>
+</div>
+
+{% endblock %}

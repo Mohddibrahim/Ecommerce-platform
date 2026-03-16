@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4 fw-bold">🛒 Your Cart</h2>
+
+    {% for item in cart.items.all %}
+
+    <div class="card shadow-sm border-0 rounded-4 mb-4 p-4">
+
+        <div class="row align-items-center">
+
+            <!-- Product Info -->
+            <div class="col-md-4">
+                <h5 class="fw-bold">{{ item.product.name }}</h5>
+                <small class="text-muted">
+                    Stock left: {{ item.product.stock }}
+                </small>
+            </div>
+
+            <!-- Price -->
+            <div class="col-md-2 text-center">
+                ₹{{ item.product.price }}
+            </div>
+
+            <!-- Quantity Control -->
+            <div class="col-md-3 text-center">
+                <form method="POST" action="{% url 'update_cart' item.id %}" class="d-flex justify-content-center align-items-center">
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            name="action"
+                            value="decrease"
+                            class="btn btn-outline-dark rounded-circle">
+                        −
+                    </button>
+
+                    <span class="mx-3 fw-bold">
+                        {{ item.quantity }}
+                    </span>
+
+                    <button type="submit"
+                            name="action"
+                            value="increase"
+                            class="btn btn-outline-dark rounded-circle"
+                            {% if item.product.stock <= 0 %} disabled {% endif %}>
+                        +
+                    </button>
+                </form>
+            </div>
+
+            <!-- Subtotal -->
+            <div class="col-md-2 text-center fw-bold">
+                ₹{{ item.subtotal }}
+            </div>
+
+            <!-- Remove -->
+            <div class="col-md-1 text-end">
+                <a href="{% url 'remove_from_cart' item.id %}"
+                   class="btn btn-sm btn-danger rounded-circle">
+                    ✕
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    {% empty %}
+    <div class="alert alert-info text-center">
+        Your cart is empty.
+    </div>
+    {% endfor %}
+
+    <!-- Total Section -->
+    <div class="card shadow-lg border-0 rounded-4 p-4 mt-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <h4>Total:</h4>
+            <h3 class="fw-bold text-success">
+                ₹{{ cart.total_price }}
+            </h3>
+
+        </div>
+
+        <div class="text-end mt-3">
+            <a href="{% url 'checkout' %}" class="btn btn-lg btn-success px-5 rounded-4">
+                Proceed to Checkout
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

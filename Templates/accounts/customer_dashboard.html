@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4 text-center">Customer Dashboard</h2>
+
+    <div class="row g-4 mb-5">
+
+        <!-- Total Orders Card -->
+        <div class="col-md-4">
+            <a href="{% url 'order_list' %}" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4 p-4 text-center border-0 hover-card">
+                    <h6 class="text-muted">Total Orders</h6>
+                    <h3 class="fw-bold display-6">{{ total_orders }}</h3>
+                </div>
+            </a>
+        </div>
+
+        <!-- Total Reviews Card -->
+        <div class="col-md-4">
+            <a href="{% url 'my_reviews' %}" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4 p-4 text-center border-0 hover-card">
+                    <h6 class="text-muted">Total Reviews</h6>
+                    <h3 class="fw-bold display-6">{{ total_reviews }}</h3>
+                </div>
+            </a>
+        </div>
+
+        <!-- Total Complaints Card -->
+        <div class="col-md-4">
+            <a href="{% url 'my_complaints' %}" class="text-decoration-none">
+                <div class="card shadow-sm rounded-4 p-4 text-center border-0 hover-card">
+                    <h6 class="text-muted">Total Complaints</h6>
+                    <h3 class="fw-bold display-6">{{ total_complaints }}</h3>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <!-- Recent Orders Preview -->
+    <h3 class="fw-bold mb-3">Recent Orders</h3>
+
+    {% if orders %}
+        {% for order in orders|slice:":5" %}
+        <div class="card shadow-sm rounded-4 mb-4 p-4 border-0 hover-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1">Order #{{ order.id }}</h6>
+                    <small class="text-muted">{{ order.created_at|date:"M d, Y - h:i A" }}</small>
+                </div>
+                <div>
+                    <span class="badge 
+                        {% if order.status == 'delivered' %} bg-success
+                        {% elif order.status == 'shipped' %} bg-primary
+                        {% elif order.status == 'paid' %} bg-warning text-dark
+                        {% else %} bg-secondary
+                        {% endif %} rounded-pill px-3 py-2 fs-6">
+                        {{ order.status|title }}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Order Items -->
+            {% for item in order.items.all %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <strong>{{ item.product.name }}</strong>
+                    <div class="text-muted small">Qty: {{ item.quantity }}</div>
+                </div>
+                <div class="fw-semibold">₹ {{ item.product.price }}</div>
+            </div>
+            {% endfor %}
+
+            <div class="text-end fw-bold text-success fs-5">
+                Total: ₹ {{ order.total_amount }}
+            </div>
+        </div>
+        {% endfor %}
+        <div class="text-center mt-3">
+            <a href="{% url 'order_list' %}" class="btn btn-primary rounded-pill">View All Orders</a>
+        </div>
+    {% else %}
+        <div class="alert alert-info text-center rounded-4">
+            You haven’t placed any orders yet.
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+.card h3 {
+    color: #0d6efd;
+}
+.badge {
+    font-weight: 500;
+}
+</style>
+
+{% endblock %}

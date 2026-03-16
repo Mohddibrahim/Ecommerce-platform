@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-4">
+
+    <h3 class="fw-bold mb-4">Checkout</h3>
+
+    <div class="row g-4">
+
+        <!-- Order Summary -->
+        <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+
+                <h5 class="fw-semibold mb-3">Order Summary</h5>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal</span>
+                    <span>₹ {{ total }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Shipping</span>
+                    <span class="text-success">Free</span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span class="text-success">₹ {{ total }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Payment Section -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+
+                <h6 class="fw-semibold mb-3">Payment</h6>
+
+                <p class="text-muted small">
+                    Currently: Cash on Delivery
+                </p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit"
+                            class="btn btn-success w-100 rounded-pill py-2">
+                        Place Order
+                    </button>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

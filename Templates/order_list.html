@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+
+    <h2 class="fw-bold mb-4">My Orders</h2>
+
+    {% if object_list %}
+        {% for order in object_list %}
+        <div class="card shadow-sm rounded-4 mb-4 p-4 border-0 hover-card">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <h6 class="fw-bold mb-1">Order #{{ order.id }}</h6>
+                    <small class="text-muted">{{ order.created_at|date:"M d, Y - h:i A" }}</small>
+                </div>
+                <div>
+                    <span class="badge 
+                        {% if order.status == 'delivered' %} bg-success
+                        {% elif order.status == 'shipped' %} bg-primary
+                        {% elif order.status == 'paid' %} bg-warning text-dark
+                        {% else %} bg-secondary
+                        {% endif %} rounded-pill px-3 py-2 fs-6">
+                        {{ order.status|title }}
+                    </span>
+                </div>
+            </div>
+
+            {% for item in order.items.all %}
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div>
+                    <strong>{{ item.product.name }}</strong>
+                    <div class="text-muted small">Qty: {{ item.quantity }}</div>
+                </div>
+                <div class="fw-semibold">₹ {{ item.product.price }}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            {% if order.status in "paid,delivered" %}
+            <div class="mb-3">
+                <a href="{% url 'add_review' item.id %}" class="btn btn-sm btn-outline-primary rounded-pill me-2">Write Review</a>
+                <a href="{% url 'add_complaint' item.id %}" class="btn btn-sm btn-outline-danger rounded-pill">Report Issue</a>
+            </div>
+            {% endif %}
+
+            <hr class="my-2">
+            {% endfor %}
+
+            <div class="text-end fw-bold text-success fs-5">
+                Total: ₹ {{ order.total_amount }}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center rounded-4">
+            You haven’t placed any orders yet.
+        </div>
+    {% endif %}
+
+</div>
+
+<style>
+.hover-card {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.hover-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+</style>
+
+{% endblock %}

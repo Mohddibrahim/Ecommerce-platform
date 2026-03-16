@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">🔥 Promotion Management</h2>
+
+        <a href="{% url 'seller_management' %}" class="btn btn-outline-dark btn-sm">
+            ← Back to Seller Management
+        </a>
+    </div>
+
+    <!-- Analytics Cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-4">
+                <h6 class="text-muted">Total Requests</h6>
+                <h4>{{ promotions|length }}</h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-4 bg-warning-subtle">
+                <h6 class="text-muted">Pending</h6>
+                <h4>
+                    {{ promotions|dictsort:"status"|length }}
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-4 bg-success-subtle">
+                <h6 class="text-muted">Approved</h6>
+                <h4>
+                    {{ approved_count|default:0 }}
+                </h4>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow-sm p-3 rounded-4 bg-info-subtle">
+                <h6 class="text-muted">Total Revenue</h6>
+                <h4>₹{{ total_revenue|default:0 }}</h4>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Promotion Cards -->
+    {% for promo in promotions %}
+    <div class="card shadow-sm border-0 rounded-4 mb-3 p-4">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+                <h5 class="fw-bold mb-1">{{ promo.product.name }}</h5>
+                <div class="small text-muted">
+                    Seller: {{ promo.seller.username }}
+                </div>
+                <div class="small text-muted">
+                    Requested: {{ promo.requested_at|date:"M d, Y H:i" }}
+                </div>
+            </div>
+
+            <div class="text-end">
+                <div class="fw-bold mb-1">₹{{ promo.amount }}</div>
+
+                {% if promo.status == "pending" %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                {% elif promo.status == "approved" %}
+                    <span class="badge bg-success">Approved</span>
+                {% else %}
+                    <span class="badge bg-danger">Rejected</span>
+                {% endif %}
+            </div>
+
+        </div>
+
+        {% if promo.product.is_promoted %}
+            <div class="mt-2">
+                <span class="badge bg-primary">Currently Promoted</span>
+            </div>
+        {% endif %}
+
+        {% if promo.status == "pending" %}
+        <div class="mt-3 d-flex gap-2">
+            <a href="{% url 'approve_promotion' promo.pk %}"
+               class="btn btn-success btn-sm">
+                Approve
+            </a>
+
+            <a href="{% url 'reject_promotion' promo.pk %}"
+               class="btn btn-danger btn-sm">
+                Reject
+            </a>
+        </div>
+        {% endif %}
+
+    </div>
+    {% empty %}
+    <div class="alert alert-info text-center">
+        No promotion requests found.
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

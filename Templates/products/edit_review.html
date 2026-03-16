@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <h3 class="fw-bold mb-4">Edit Review</h3>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Rating</label>
+            <select name="rating" class="form-control">
+                {% for i in "12345" %}
+                    <option value="{{ forloop.counter }}"
+                        {% if review.rating == forloop.counter %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ forloop.counter }} Star
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea name="description"
+                      class="form-control"
+                      rows="4">{{ review.description }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Change Image</label>
+            <input type="file" name="image" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Change Video</label>
+            <input type="file" name="video" class="form-control">
+        </div>
+
+        <button class="btn btn-dark">Update Review</button>
+    </form>
+</div>
+
+{% endblock %}

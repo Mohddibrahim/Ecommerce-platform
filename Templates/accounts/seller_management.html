@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Seller Management</h2>
+
+        <div>
+
+
+
+            <a href="{% url 'promotion_management' %}" class="btn btn-outline-warning btn-sm me-3">
+                🔥 Promotion Requests
+                <span class="badge bg-danger">
+                    {{ pending_promotion_count }}
+                </span>
+            </a>
+
+            <span class="badge bg-dark me-2">Total: {{ total_sellers }}</span>
+            <span class="badge bg-warning text-dark me-2">Pending: {{ pending_sellers }}</span>
+            <span class="badge bg-danger">Blocked: {{ blocked_sellers }}</span>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        {% for seller in sellers %}
+        <div class="col-12 col-md-6 col-lg-4">
+
+            <div class="card shadow border-0 rounded-4 h-100 p-4">
+
+                <!-- Seller Header -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">{{ seller.username }}</h5>
+
+                    {% if seller.is_blocked %}
+                    <span class="badge bg-danger">Blocked</span>
+                    {% elif seller.is_approved %}
+                    <span class="badge bg-success">Approved</span>
+                    {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </div>
+
+                <hr>
+
+                <!-- Email -->
+                <div class="mb-2 text-muted small">
+                    {{ seller.email }}
+                </div>
+
+                <!-- Stats -->
+                <div class="mb-2">
+                    📦 Products:
+                    <strong>{{ seller.product_count|default:0 }}</strong>
+                </div>
+
+                <div class="mb-2">
+                    🛒 Orders:
+                    <strong>{{ seller.order_count|default:0 }}</strong>
+                </div>
+
+                <div class="mb-2">
+                    🔥 Active Promotions:
+                    <strong>{{ seller.promotion_count|default:0 }}</strong>
+                </div>
+
+                <div class="mb-3">
+                    ⏳ Pending Promotions:
+                    <strong class="text-warning">
+                        {{ seller.pending_promo_count|default:0 }}
+                    </strong>
+                </div>
+
+
+                <div class="mb-3">
+                    ⚠ Complaints:
+                    <strong class="text-danger">
+                        {{ seller.complaint_count|default:0 }}
+                    </strong>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex flex-column gap-2 mt-auto">
+
+                    <a href="{% url 'seller_complaints_admin' seller.id %}" class="btn btn-outline-danger btn-sm w-100">
+                        View Complaints
+                    </a>
+
+                    {% if not seller.is_approved and not seller.is_blocked %}
+                    <a href="{% url 'approve_seller' seller.id %}" class="btn btn-success btn-sm w-100">
+                        Approve
+                    </a>
+                    
+                    {% endif %}
+                    <a href="{% url 'promotion_management' %}?seller={{ seller.id }}"
+                        class="btn btn-outline-warning btn-sm w-100">
+                        View Promotions
+                    </a>
+
+                    {% if not seller.is_blocked %}
+                    <a href="{% url 'block_seller' seller.id %}" class="btn btn-danger btn-sm w-100">
+                        Block
+                    </a>
+                    {% else %}
+                    <a href="{% url 'approve_seller' seller.id %}" class="btn btn-warning btn-sm w-100">
+                        Unblock
+                    </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+        </div>
+
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info text-center">
+                No sellers found.
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+</div>
+
+{% endblock %}

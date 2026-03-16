@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+
+    <h4 class="fw-bold mb-4 text-danger">
+        Report Issue for {{ item.product.name }}
+    </h4>
+
+    <div class="card shadow-sm rounded-4 p-4">
+
+        <form method="POST">
+            {% csrf_token %}
+            <select name="issue_type" class="form-control mb-3" required>
+    <option value="">Select Issue Type</option>
+    <option value="late_delivery">Late Delivery</option>
+    <option value="damaged_product">Damaged Product</option>
+    <option value="wrong_item">Wrong Item</option>
+    <option value="fake_product">Fake Product</option>
+    <option value="other">Other</option>
+</select>
+
+
+            <textarea name="message"
+                      class="form-control mb-3"
+                      rows="4"
+                      placeholder="Describe the issue..."
+                      required></textarea>
+
+            <button class="btn btn-danger px-4">
+                Submit Complaint 🚩
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

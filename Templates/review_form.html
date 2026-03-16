@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container py-5">
+
+    <h4 class="fw-bold mb-4">
+        Write Review for {{ item.product.name }}
+    </h4>
+
+    <div class="card shadow-sm rounded-4 p-4">
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="fw-semibold">Your Rating</label>
+                <select name="rating" class="form-select mt-2" required>
+                    <option value="">Select Rating</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ Good</option>
+                    <option value="3">⭐⭐⭐ Average</option>
+                    <option value="2">⭐⭐ Poor</option>
+                    <option value="1">⭐ Very Bad</option>
+                </select>
+            </div>
+
+            <textarea name="description"
+                      class="form-control mb-3"
+                      rows="3"
+                      placeholder="Share your experience..."
+                      required></textarea>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Choose Image</label>
+                    <input type="file" name="image" class="form-control mb-3">
+                </div>
+                <div class="col-md-6">
+                    <label>Choose video</label>
+                    <input type="file" name="video" class="form-control mb-3">
+                </div>
+            </div>
+
+            <button class="btn btn-primary px-4">
+                Submit Review
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+
+    <h3 class="fw-bold mb-4">Complaints Against You</h3>
+
+    {% for complaint in complaints %}
+    <div class="card shadow-sm border-danger p-3 mb-3 rounded-4">
+
+        <div><strong>Customer:</strong> {{ complaint.customer.username }}</div>
+        <div><strong>Product:</strong> {{ complaint.product.name }}</div>
+        <div><strong>Issue:</strong> {{ complaint.get_issue_type_display }}</div>
+        <div><strong>Status:</strong> 
+            <span class="badge bg-warning text-dark">
+                {{ complaint.get_status_display }}
+            </span>
+        </div>
+
+        <p class="mt-2">{{ complaint.message }}</p>
+
+    </div>
+    {% empty %}
+    <div class="alert alert-info">No complaints yet 🎉</div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

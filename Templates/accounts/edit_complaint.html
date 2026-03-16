@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+    <h3>Edit Complaint</h3>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label>Issue Type</label>
+            <select name="issue_type" class="form-control">
+                <option value="damaged"
+                    {% if complaint.issue_type == "damaged" %}selected{% endif %}>
+                    Damaged
+                </option>
+                <option value="late_delivery"
+                    {% if complaint.issue_type == "late_delivery" %}selected{% endif %}>
+                    Late Delivery
+                </option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Message</label>
+            <textarea name="message" class="form-control" rows="4">
+{{ complaint.message }}
+            </textarea>
+        </div>
+
+        <button class="btn btn-primary">Update Complaint</button>
+    </form>
+
+</div>
+
+{% endblock %}
